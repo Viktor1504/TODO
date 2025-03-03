@@ -7,7 +7,9 @@ import Grid from "@mui/material/Grid"
 import TextField from "@mui/material/TextField"
 import { ResultCode } from "common/enums"
 import { useAppDispatch } from "common/hooks"
+import { Path } from "common/router/router"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
+import { useNavigate } from "react-router"
 import { setIsLoggedIn } from "../../../../app/appSlice"
 import { useLoginMutation } from "../../api/authAPI"
 import { LoginArgs } from "../../api/authAPI.types"
@@ -25,6 +27,7 @@ const FormContainer = styled(Grid)(({ theme }) => ({
 
 export const Login = () => {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const [login] = useLoginMutation()
 
   const {
@@ -32,7 +35,6 @@ export const Login = () => {
     handleSubmit,
     reset,
     control,
-
     formState: { errors },
   } = useForm<LoginArgs>({ defaultValues: { email: "", password: "", rememberMe: false } })
 
@@ -42,6 +44,7 @@ export const Login = () => {
         if (res.data?.resultCode === ResultCode.Success) {
           dispatch(setIsLoggedIn({ isLoggedIn: true }))
           localStorage.setItem("sn-token", res.data.data.token)
+          navigate(Path.Main)
         }
       })
       .finally(() => {

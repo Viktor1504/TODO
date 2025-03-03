@@ -1,1 +1,1 @@
-export { handleError } from "./handleError"
+export { rtkQueryErrorLogger } from "./errorHandlingMiddleware"
