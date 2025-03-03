@@ -1,6 +1,7 @@
 import { isFulfilled, isRejectedWithValue, Middleware, type MiddlewareAPI } from "@reduxjs/toolkit"
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query"
 import { ResultCode } from "common/enums"
+import type { BaseResponse } from "common/types"
 import { setAppError } from "../../app/appSlice"
 
 const isErrorWithMessage = (error: unknown): error is { message: string } => {
@@ -38,10 +39,9 @@ export const rtkQueryErrorLogger: Middleware = (api: MiddlewareAPI) => (next) =>
     }
   }
   if (isFulfilled(action)) {
-    const data = action.payload as any
-    if ((data as { resultCode: ResultCode }).resultCode === ResultCode.Error) {
-      const messages = (data as { messages?: string[] }).messages
-      error = messages?.length ? messages[0] : error
+    const data = action.payload as BaseResponse
+    if (data.resultCode === ResultCode.Error) {
+      error = data.messages.length ? data.messages[0] : error
       api.dispatch(setAppError({ error }))
     }
   }

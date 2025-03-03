@@ -1,10 +1,12 @@
+import { ResultCode } from "common/enums"
+
 export type FieldError = {
   error: string
   field: string
 }
 
 export type BaseResponse<D = {}> = {
-  resultCode: number
+  resultCode: ResultCode
   messages: string[]
   fieldsErrors: FieldError[]
   data: D
